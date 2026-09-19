@@ -1,0 +1,54 @@
+name: DOOM-iOS
+options:
+  bundleIdPrefix: com.acops
+  deploymentTarget:
+    iOS: "15.0"
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+    TARGETED_DEVICE_FAMILY: "1,2"
+targets:
+  DOOM-iOS:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+      - path: Vendor/doomgeneric
+        excludes:
+          - doomgeneric_allegro.c
+          - doomgeneric_emscripten.c
+          - doomgeneric_linuxvt.c
+          - doomgeneric_sdl.c
+          - doomgeneric_soso.c
+          - doomgeneric_sosox.c
+          - doomgeneric_win.c
+          - doomgeneric_xlib.c
+          - gusconf.c
+          - i_allegromusic.c
+          - i_allegrosound.c
+          - i_sdlmusic.c
+          - i_sdlsound.c
+          - icon.c
+          - mus2mid.c
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.acops.doom-ios
+        PRODUCT_NAME: DOOM-iOS
+        INFOPLIST_FILE: App/Info.plist
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+        HEADER_SEARCH_PATHS:
+          - "$(SRCROOT)/Vendor/doomgeneric"
+        GCC_C_LANGUAGE_STANDARD: gnu11
+        GCC_PREPROCESSOR_DEFINITIONS:
+          - "$(inherited)"
+          - NORMALUNIX=1
+          - DOOMGENERIC_RESX=640
+          - DOOMGENERIC_RESY=400
+        OTHER_LDFLAGS:
+          - "$(inherited)"
+          - "-lm"
+        ENABLE_BITCODE: NO
+    scheme:
+      testTargets: []
