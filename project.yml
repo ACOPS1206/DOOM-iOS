@@ -13,7 +13,7 @@ targets:
     platform: iOS
     sources:
       - path: App
-      - path: Vendor/doomgeneric
+      - path: Vendor/doomgeneric/doomgeneric
         excludes:
           - doomgeneric_allegro.c
           - doomgeneric_emscripten.c
@@ -39,7 +39,7 @@ targets:
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
         HEADER_SEARCH_PATHS:
-          - "$(SRCROOT)/Vendor/doomgeneric"
+          - "$(SRCROOT)/Vendor/doomgeneric/doomgeneric"
         GCC_C_LANGUAGE_STANDARD: gnu11
         GCC_PREPROCESSOR_DEFINITIONS:
           - "$(inherited)"
