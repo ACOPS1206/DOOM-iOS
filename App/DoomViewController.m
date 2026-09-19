@@ -4,6 +4,26 @@
 #include <math.h>
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
+static UIVisualEffect *DoomGlassEffect(void) {
+    Class glassClass = NSClassFromString(@"UIGlassEffect");
+    if (glassClass && [glassClass instancesRespondToSelector:@selector(init)]) return [[glassClass alloc] init];
+    return [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemUltraThinMaterialDark];
+}
+
+static BOOL DoomSupportsGlassButtons(void) {
+    return [UIButtonConfiguration.class respondsToSelector:NSSelectorFromString(@"glassButtonConfiguration")];
+}
+
+static UIButtonConfiguration *DoomGlassButtonConfiguration(BOOL prominent) {
+    SEL selector = NSSelectorFromString(prominent ? @"prominentGlassButtonConfiguration" : @"glassButtonConfiguration");
+    if ([UIButtonConfiguration.class respondsToSelector:selector]) {
+        typedef id (*ConfigurationFactory)(id, SEL);
+        ConfigurationFactory factory = (ConfigurationFactory)[UIButtonConfiguration.class methodForSelector:selector];
+        return factory(UIButtonConfiguration.class, selector);
+    }
+    return prominent ? [UIButtonConfiguration filledButtonConfiguration] : [UIButtonConfiguration tintedButtonConfiguration];
+}
+
 @interface DoomGlassView : UIView
 @property (nonatomic, strong, readonly) UIView *contentView;
 @end
@@ -14,11 +34,7 @@
 - (instancetype)init {
     if ((self = [super initWithFrame:CGRectZero])) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
-        UIVisualEffect *effect = nil;
-        Class glassClass = NSClassFromString(@"UIGlassEffect");
-        if (glassClass && [glassClass instancesRespondToSelector:@selector(init)]) effect = [[glassClass alloc] init];
-        if (!effect) effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemUltraThinMaterialDark];
-        _effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+        _effectView = [[UIVisualEffectView alloc] initWithEffect:DoomGlassEffect()];
         _effectView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:_effectView];
         [NSLayoutConstraint activateConstraints:@[
@@ -50,10 +66,7 @@
         self.isAccessibilityElement = YES;
         self.accessibilityLabel = @"이동 및 회전 조이스틱";
         self.accessibilityHint = @"위아래로 이동하고 좌우로 회전합니다";
-        UIVisualEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemUltraThinMaterialDark];
-        Class glassClass = NSClassFromString(@"UIGlassEffect");
-        if (glassClass && [glassClass instancesRespondToSelector:@selector(init)]) effect = [[glassClass alloc] init];
-        _base = [[UIVisualEffectView alloc] initWithEffect:effect];
+        _base = [[UIVisualEffectView alloc] initWithEffect:DoomGlassEffect()];
         _base.userInteractionEnabled = NO;
         _base.layer.borderColor = [UIColor colorWithWhite:1 alpha:0.28].CGColor;
         _base.layer.borderWidth = 1;
@@ -148,13 +161,13 @@
 - (UIButton *)gameButton:(NSString *)title symbol:(NSString *)symbol key:(unsigned char)key {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     button.translatesAutoresizingMaskIntoConstraints = NO;
-    UIButtonConfiguration *configuration = [UIButtonConfiguration filledButtonConfiguration];
+    UIButtonConfiguration *configuration = DoomGlassButtonConfiguration(NO);
     configuration.title = title;
     configuration.image = [UIImage systemImageNamed:symbol];
     configuration.imagePlacement = NSDirectionalRectEdgeTop;
     configuration.imagePadding = 3;
     configuration.baseForegroundColor = UIColor.whiteColor;
-    configuration.baseBackgroundColor = [UIColor colorWithWhite:0.08 alpha:0.68];
+    if (!DoomSupportsGlassButtons()) configuration.baseBackgroundColor = [UIColor colorWithWhite:0.08 alpha:0.68];
     configuration.cornerStyle = UIButtonConfigurationCornerStyleLarge;
     button.configuration = configuration;
     button.layer.borderColor = [UIColor colorWithWhite:1 alpha:0.22].CGColor;
@@ -198,13 +211,13 @@
 - (UIButton *)launcherButton:(NSString *)title symbol:(NSString *)symbol primary:(BOOL)primary action:(SEL)action {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     button.translatesAutoresizingMaskIntoConstraints = NO;
-    UIButtonConfiguration *configuration = primary ? [UIButtonConfiguration filledButtonConfiguration] : [UIButtonConfiguration tintedButtonConfiguration];
+    UIButtonConfiguration *configuration = DoomGlassButtonConfiguration(primary);
     configuration.title = title;
     configuration.image = [UIImage systemImageNamed:symbol];
     configuration.imagePadding = 8;
     configuration.cornerStyle = UIButtonConfigurationCornerStyleLarge;
-    configuration.baseForegroundColor = primary ? UIColor.blackColor : UIColor.whiteColor;
-    configuration.baseBackgroundColor = primary ? UIColor.whiteColor : [UIColor colorWithWhite:1 alpha:0.14];
+    configuration.baseForegroundColor = UIColor.whiteColor;
+    configuration.baseBackgroundColor = primary ? [UIColor colorWithRed:1 green:0.34 blue:0.12 alpha:0.92] : [UIColor colorWithWhite:1 alpha:0.14];
     button.configuration = configuration;
     [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
     [button.heightAnchor constraintGreaterThanOrEqualToConstant:50].active = YES;
