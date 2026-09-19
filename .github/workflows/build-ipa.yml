@@ -17,6 +17,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+      - name: Apply iOS compatibility patch
+        run: git -C Vendor/doomgeneric apply ../../Patches/doomgeneric-ios.patch
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate Xcode project

@@ -44,6 +44,7 @@ targets:
         GCC_PREPROCESSOR_DEFINITIONS:
           - "$(inherited)"
           - NORMALUNIX=1
+          - __IOS__=1
           - DOOMGENERIC_RESX=640
           - DOOMGENERIC_RESY=400
         OTHER_LDFLAGS:

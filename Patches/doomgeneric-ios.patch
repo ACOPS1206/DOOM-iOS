@@ -1,0 +1,25 @@
+diff --git a/doomgeneric/i_system.c b/doomgeneric/i_system.c
+index 8e4ddfd..d58297c 100644
+--- a/doomgeneric/i_system.c
++++ b/doomgeneric/i_system.c
+@@ -264,7 +264,7 @@ void I_Quit (void)
+ #endif
+ }
+ 
+-#if !defined(_WIN32) && !defined(__MACOSX__) && !defined(__DJGPP__)
++#if !defined(_WIN32) && !defined(__MACOSX__) && !defined(__DJGPP__) && !defined(__IOS__)
+ #define ZENITY_BINARY "/usr/bin/zenity"
+ 
+ // returns non-zero if zenity is available
+@@ -448,6 +448,10 @@ void I_Error (char *error, ...)
+                                         message,
+                                         NULL);
+     }
++#elif defined(__IOS__)
++    {
++        (void) msgbuf;
++    }
+ #elif defined(__DJGPP__)
+     {
+         printf("%s\n", msgbuf);
+
