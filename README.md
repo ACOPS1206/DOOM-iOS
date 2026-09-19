@@ -1,6 +1,6 @@
 # DOOM iOS
 
-An open-source iOS port built on [doomgeneric](https://github.com/ozkl/doomgeneric). It provides a native UIKit renderer, touch controls, and WAD importing through the Files picker.
+An open-source iOS port built on [doomgeneric](https://github.com/ozkl/doomgeneric). It provides a native UIKit renderer, a multi-WAD launcher, joystick controls, and WAD importing through the Files picker.
 
 ## Game data
 
@@ -18,7 +18,8 @@ GitHub Actions creates an **unsigned** IPA on every push. Tagged commits such as
 
 ## Controls
 
-- Arrow buttons: move and turn
+- Analog joystick: move and turn
+- SELECT: confirm menu items (Enter)
 - FIRE: fire
 - USE: open/activate
 - MENU: open or close the menu

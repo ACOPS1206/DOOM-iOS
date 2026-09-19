@@ -34,6 +34,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.acops.doom-ios
         PRODUCT_NAME: DOOM-iOS
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_FILE: App/Info.plist
         CODE_SIGN_STYLE: Automatic
         CODE_SIGNING_ALLOWED: NO
